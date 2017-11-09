@@ -1,13 +1,13 @@
 ---
 title: "R et statistique textuelle"
-subtitle: "Cours bloc, 8-9.11.2017, UNIL"
 author: "Yannick Rochat"
-Date: "9 novembre 2017"
 output:
-  ioslides_presentation: default
+  html_document:
+    df_print: paged
   html_notebook: default
-  beamer_presentation: default
   slidy_presentation: default
+subtitle: Cours bloc, 8-9.11.2017, UNIL
+Date: 9 novembre 2017
 ---
 
 ## Quelques ressources générales
@@ -419,7 +419,7 @@ df
 ----
 
 
-## Comment fonctionne les packages ?
+## Comment fonctionnent les packages ?
 
 Lorsqu'on démarre une session dans RStudio (ou dans R/R GUI), une série de fonctions sont immédiatement disponibles, telles les opérations mathématiques de base et quelques fonctions permettant de faire de l'analyse statistique ou de la visualisation.
 
@@ -529,8 +529,8 @@ On peut l'améliorer en ajoutant des options.
 ```{r}
 gg_mieux <- ggplot(tweets, aes(x = created_at)) +
        geom_histogram(binwidth = 3600) +
-       scale_x_datetime(date_breaks = "3 hours", 
-                        date_minor_breaks = "1 hours", 
+       scale_x_datetime(date_breaks = "3 hour", 
+                        date_minor_breaks = "1 hour", 
                         date_labels = "%m-%d %Hh", 
                         name = "Date de création du tweet") +
        scale_y_continuous(name = "Nombre de tweets")
@@ -716,9 +716,17 @@ library(lsa)        ## latent semantic analysis
 Nous allons découvrir ce package avec un corpus de tests de jeux de football issus de la presse spécialisée.
 
 ```{r}
-fifa <- read_csv2("https://gist.githubusercontent.com/yrochat/844247a0a985f54fb69f09fdc02bfb15/raw/011092f37b6b4529951541b434e802bf995fc6e5/fifa.csv") ## le fichier à importer
+fifa <- read.csv2("https://gist.githubusercontent.com/yrochat/844247a0a985f54fb69f09fdc02bfb15/raw/011092f37b6b4529951541b434e802bf995fc6e5/fifa.csv", stringsAsFactors = FALSE) ## le fichier à importer
+```
+
+---
+
+Un aperçu du tableau.
+
+```{r}
 fifa
 ```
+
 
 ```{r echo = FALSE}
 fifa$label <- str_c(fifa$auteur, str_sub(fifa$annee, 3, 4), sep = "_") ## on crée cette variable pour nommer les points du graphe
@@ -730,6 +738,7 @@ fifa$label <- str_c(fifa$auteur, str_sub(fifa$annee, 3, 4), sep = "_") ## on cr�
 
 ```{r}
 fifa.corpus <- TextReuseCorpus(text = fifa$texte, tokenizer = tokenize_ngrams)
+fifa.corpus
 ```
 
 ---
@@ -738,6 +747,7 @@ Une comparaison des textes deux à deux.
 
 ```{r}
 comparisons <- pairwise_compare(fifa.corpus, jaccard_similarity)
+comparisons
 ```
 
 ---
@@ -826,6 +836,7 @@ Nous retirons du texte les *stopwords*.
 corpus <- tm_map(corpus, content_transformer(function(x) removeWords(x, stopwords("french"))))
 ```
 
+
 ---
 
 Voici la liste des *stopwords* en français.
@@ -863,6 +874,12 @@ dist.mat
 
 ---
 
+```{r}
+plot(hclust(dist.mat))
+```
+
+---
+
 Classical multidimensional scaling
 
 ```{r}
@@ -878,6 +895,8 @@ points <- data.frame(x = fit$points[, 1], y = fit$points[, 2], name = fifa$journ
 ```
 
 ---
+
+Résultat.
 
 ```{r}
 ggplot(points, aes(x = x, y = y)) + 
