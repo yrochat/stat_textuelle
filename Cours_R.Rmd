@@ -1,0 +1,888 @@
+---
+title: "R et statistique textuelle"
+subtitle: "Cours bloc, 8-9.11.2017, UNIL"
+author: "Yannick Rochat"
+Date: "9 novembre 2017"
+output:
+  ioslides_presentation: default
+  html_notebook: default
+  beamer_presentation: default
+  slidy_presentation: default
+---
+
+## Quelques ressources générales
+
+**Introduction à R et au tidyverse** de Julien Barnier
+
+https://juba.github.io/tidyverse
+
+**R for Data Science** de Garrett Grolemund & Hadley Wickham
+
+http://r4ds.had.co.nz/
+
+---
+
+## Qu'est-ce qu'un notebook ?
+
+Ce document que vous avez ouvert dans RStudio ou dans un navigateur web est un notebook.
+
+---
+
+C'est un format de document permettant de présenter du texte, du code, et les résultats de l'exécution du code.
+
+---
+
+Dans la recherche scientifique, ce format permet de répliquer une expérience.
+
+Il est en passe de devenir un standard.
+
+---
+
+Le système de notebooks le plus répandu est Jupyter, qui fonctionne avec le langage de programmation Python mais permet également de gérer d'autres langages de programmation tel R.
+
+---
+
+Ici, nous utilisons des notebooks au format prévu par RStudio. 
+
+Un notebook peut se décliner en plusieurs formats.
+
+* Le fichier au format `.Rmd` s'ouvre dans RStudio. Il est interactif.
+* Le fichier au format `.nb.html` s'ouvre dans un navigateur. Il n'est pas interactif.
+* Le fichier au format `.html` contient les slides (dans le cas présent).
+
+---
+
+Le code apparaît systématiquement dans une case sur fond gris.
+
+Le résultat du code apparaît ensuite dans une case sur fond blanc.
+
+```{r}
+for (i in 1:3) print(LETTERS[i])
+```
+
+
+---
+
+En ouvrant le notebook dans RStudio, vous aurez la possibilité de modifier le code et de le réexécuter.
+
+---
+
+Par exemple, dans le code ci-dessous, nous sauvons la valeur "2" dans la variable "a" et la valeur "e" dans la variable "b". Puis nous élevons a à la puissance b, c'est-à-dire 2 à la puissance 3. 
+
+Le résultat s'affiche en-dessous.
+
+```{r}
+a <- 2
+b <- 3
+a^b
+```
+
+Essayez de modifier les valeurs, puis cliquez sur la flèche verte pour voir le résultat.
+
+---
+
+## R, qu'est-ce ?
+
+R est un langage de programmation à l'origine prévu pour faire de l'analyse statistique sur la base du langage propriétaire S. Son usage s'est répandu bien au-delà.
+
+---
+
+R peut par exemple être lancé dans un terminal.
+
+Mais R désigne également une interface de programmation que l'on nomme R GUI, "GUI" signifiant "Graphical User Interface".
+
+R GUI est un logiciel libre.
+
+---
+
+## … et RStudio ?
+
+RStudio est un environnement permettant de programmer en R, c'est-à-dire un peu plus qu'une simple interface graphique.
+
+---
+
+En plus d'afficher une console (là où le code est exécuté) et une fenêtre de script (là où l'on rédige le code que l'on veut réutiliser), RStudio permet par exemple de connaître en tout temps les variables enregistrées en mémoire, ou encore d'utiliser un notebook comme celui-ci.
+
+---
+
+Dans ce module de cours, nous allons travailler avec RStudio.
+
+---
+
+## Exemples de base
+
+
+```{r}
+4 + 3         ## Une simple addition
+2^2 + 3*4     ## Priorité des opérations
+```
+
+----
+
+```{r}
+z = 12.5      ## Sauvegarde d'une valeur dans une variable
+z <- 12.5     ## Privilégier l'utilisation de la flèche <-
+z
+```
+
+---
+
+```{r}
+x <- 12.5
+y <- 7.5
+x + y
+```
+
+----
+
+```{r}
+y = sqrt(4)    ## Fonction racine carrée
+y
+```
+
+---
+
+```{r}
+ls()    ## Les variables sauvées dans l'environnement de travail
+rm(y)   ## On retire la variable "y"
+ls()
+```
+
+----
+
+```{r}
+class(z)                     ## Le type d'une variable
+```
+
+---
+
+```{r eval = FALSE}
+help(exp)                     ## La page d'aide d'une variable
+?exp                          ## Idem
+help.search("linear model")   ## Chercher dans les pages d'aide
+```
+
+---
+
+Dans ce notebook comme dans les scripts que vous trouverez en ligne, les fonctions sortent du chapeau comme si de rien n'était.
+
+Ne vous faites pas d'illusions: 
+
+* Il a d'abord fallu découvrir leur existence.
+* Puis comprendre leur fonctionnement.
+* Le plus souvent en faisant quelques erreurs au passage ^^
+
+---
+
+C'est pour cette raison qu'il ne faut **jamais** hésiter à faire une recherche 
+
+* dans les pages d'aide de R
+  + avec `?` lorsqu'on connaît la fonction.
+  + avec `??` lorsqu'on ne la connaît pas.
+* en ligne 
+  + sur stackoverflow
+  + sur un moteur de recherche
+
+---
+
+
+### Chaînes de caractères
+
+
+```{r}
+b <- "unil"
+c <- "patient 1"
+nchar(b)
+nchar(c)
+paste(b, c, collapse = "")
+```
+
+
+----
+
+### Éléments logiques
+
+* TRUE et FALSE
+
+Mais aussi…
+
+* NA, NaN
+* Inf
+
+----
+
+```{r}
+1/0
+x <- Inf
+x - x
+```
+
+"NA" signifie "Not available".
+
+"NaN" signifie "Not a Number".
+
+----
+
+### Opérateurs arithmétiques
+
+* \+ 
+* \- 
+* \* 
+* / 
+* ˆ 
+* %% 
+* %/% 
+* %*% 
+
+----
+
+
+### Operateurs de comparaisons
+
+
+```{r error = TRUE}
+1 == 1
+1 == 2
+1 != 1 
+```
+
+---
+
+```{r}
+1 != 2
+1 < 1
+1 <= 1
+```
+
+----
+
+### Opérateurs logiques
+
+```{r}
+a <- (1 < 2)
+a
+!a
+```
+
+----
+
+```{r}
+b <- (2 > 3)
+a & b
+a | b
+```
+
+
+## Comment connaître le type d'une variable ?
+
+```{r}
+a <- 1
+b <- 1:5
+class(a)
+class(b)
+```
+
+----
+
+```{r}
+c <- "hello"
+d <- 1 > 2
+class(c)
+class(d)
+```
+
+----
+
+Quelle est la "taille" de l'objet ?
+
+```{r}
+length(a)
+length(b)
+length(c)
+length(d)
+```
+
+----
+
+`str` fournit une description de l'objet
+
+```{r}
+str(a)
+str(b)
+str(c)
+str(d)
+```
+
+---
+
+## Classes (de base)
+
+* Vecteurs
+* Listes
+* Matrices
+* Tables
+* *Data frames*
+
+
+## Vecteurs
+
+
+```{r}
+x <- c(5,4,5,6,7,8) 
+x
+x_char = c("a","b","c") 
+x_char
+```
+
+----
+
+Accéder directement à un élément d'un vecteur
+
+```{r}
+x
+x[2]
+x[c(2,4)]
+```
+
+---
+```{r}
+x
+x[c(-2,-4)]
+```
+
+
+----
+
+Manipuler des vecteurs
+
+```{r}
+x[6] = 10
+x
+```
+
+---
+
+```{r}
+a = c(3,4,5,6)
+a[c(2,3)] = 0
+a
+```
+
+---
+
+```{r}
+a[c(2,3)] = c(8,7)
+a
+```
+
+----
+
+```{r}
+c(1,2,3) + c(3,4,5)
+```
+
+----
+
+```{r}
+4 * c(1,2,3)
+c(2,5) < 4
+```
+
+----
+
+Attention lorsque deux éléments ne sont pas de même taille !
+
+```{r}
+c(1,2) + c(3,4,5,6)
+```
+
+----
+
+Attention lorsque l'un n'est pas multiple de l'autre !
+
+```{r}
+c(1,2) + c(2,3,4)
+```
+
+---
+
+## Data frames
+
+
+
+```{r}
+df <- data.frame(age = c(24, 26, 49, 52, 14), 
+                 taille = c(160, 180, 178, 180, 150))
+df
+```
+
+----
+
+
+## Comment fonctionne les packages ?
+
+Lorsqu'on démarre une session dans RStudio (ou dans R/R GUI), une série de fonctions sont immédiatement disponibles, telles les opérations mathématiques de base et quelques fonctions permettant de faire de l'analyse statistique ou de la visualisation.
+
+---
+
+Ensuite, en fonction de ses besoins, on charge dans R des *packages* supplémentaires, c'est-à-dire des ensembles de fonctions créées et réunies autour d'un but commun.
+
+Chaque *package* disponible pour R est open source (normalement).
+
+---
+
+Il existe plus de 10'000 *packages* sur la plateforme [CRAN](https://cran.r-project.org) et encore de nombreux autres en dehors, par exemple sur GitHub.
+
+---
+
+Un package doit être **installé** une et une seule fois. Cela se fait avec la fonction `install.packages`
+
+Un package doit être **chargé** à chaque utilisation de R. Cela se fait avec la fonction `library`
+
+
+---
+
+Si le *package* est mis à jour,  lancer la fonction `install.packages` permettra de l'actualiser.
+
+Il est possible de gérer les *packages*, y compris de les installer, dans le menu **Tools** > **Install packages…**
+
+---
+
+Des exemples de *packages*
+
+* **sp** permet de faire de l'analyse de données spatialisées.
+* **ggplot2** est un package populaire pour réaliser des visualisations de données.
+* **igraph** est un package permettant de faire de l'analyse de réseaux.
+* **shiny** permet de créer des applications web.
+
+---
+
+L'installation des *packages* nécessaires pour faire tourner le code de ce notebook est en général réalisée automatiquement grâce aux deux lignes de code suivantes. 
+
+---
+
+Si le *package* est déjà installé, le programme saute à la seconde ligne et se contente de charger le *package*. Si ce n'est pas le cas, il s'occupe d'abord de l'installer (ligne 1) puis le charge.
+
+```{r}
+if (!require(rtweet)) install.packages("rtweet") ## installation
+library(rtweet)                                   ## chargement
+```
+
+---
+
+`rtweet` est un package permettant de récupérer et d'analyser des tweets (ces courts messages postés sur Twitter).
+
+---
+
+Dans cet exemple, on charge les 100 derniers tweets contenant le mot "unil".
+
+Il est probable qu'un *warning* s'affiche.
+
+```{r}
+tweets <- search_tweets("unil", n = 100)
+```
+
+---
+
+Un aperçu de ces tweets.
+
+```{r}
+tweets
+```
+
+---
+
+Visualisons les dates d'envoi des tweets.
+
+---
+
+Tout d'abord, on charge le package ggplot2 qui fournit de nouvelles fonctions pour faire de la visualisation.
+
+```{r}
+if (!require(ggplot2)) install.packages("ggplot2")
+library(ggplot2)
+```
+
+---
+
+Puis on crée un histogramme avec nos données (la colonne "created_at" dans le tableau ci-dessus).
+
+Voici le résultat brut.
+
+---
+
+```{r}
+gg_basic <- ggplot(tweets, aes(x = created_at)) +
+       geom_histogram()
+```
+
+---
+
+```{r}
+gg_basic
+```
+
+---
+
+On peut l'améliorer en ajoutant des options.
+
+```{r}
+gg_mieux <- ggplot(tweets, aes(x = created_at)) +
+       geom_histogram(binwidth = 3600) +
+       scale_x_datetime(date_breaks = "3 hours", 
+                        date_minor_breaks = "1 hours", 
+                        date_labels = "%m-%d %Hh", 
+                        name = "Date de création du tweet") +
+       scale_y_continuous(name = "Nombre de tweets")
+```
+
+---
+
+```{r}
+gg_mieux
+```
+
+---
+
+Avec le thème "minimal".
+
+```{r}
+gg_minimal <- gg_mieux + theme_minimal()
+```
+
+---
+
+```{r}
+gg_minimal
+```
+
+---
+
+### Cheat sheets
+
+Pour de nombreuses tâches en R, on trouve des [feuilles de triche](https://www.rstudio.com/resources/cheatsheets/).
+
+Par exemple, il en existe une pour `ggplot2`.
+
+https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf
+
+---
+
+### Gutenberg
+
+Il existe un *package* pour télécharger les contenus de https://www.gutenberg.org/
+
+```{r}
+if (!require(gutenbergr)) install.packages("gutenbergr")
+library(gutenbergr)
+```
+
+---
+
+Nous avons besoin au passage du package `dplyr` pour utiliser les %>% ("pipes").
+
+Les *pipes* permettent de rédiger du code s'exécutant de gauche à droite. Il devient ainsi plus lisible. 
+
+```{r}
+if (!require(dplyr)) install.packages("dplyr")            
+library(dplyr)                                            
+```
+
+---
+
+Pour plus d'informations sur les *pipes*.
+
+http://r4ds.had.co.nz/pipes.html#piping-alternatives
+
+Au passage: ce livre est une excellente ressource (gratuite) sur R.
+
+---
+
+Pas immédiat de naviguer dans la base de données Gutenberg avec ce *package*.
+
+Explorons son fonctionnement avec la fonction `help(package="gutenbergr")`
+
+---
+
+La fonction `gutenberg_metadata` réunit les métadonnées de la base et va nous permettre de faire notre choix parmi les oeuvres.
+
+```{r}
+head(gutenberg_metadata)
+```
+
+---
+
+On choisit Émile Zola (attention, l'orthographe doit être exacte).
+
+```{r}
+gutenberg_metadata %>%
+  filter(author == "Zola, Émile")
+```
+
+---
+
+Pour faire une recherche sans connaître la dénomination exacte de l'auteur-e dans la base de données.
+
+Tout d'abord nous chargeons un *package* pour utiliser des expressions régulières qui soit meilleur que ce qui est proposé de base.
+
+```{r}
+if (!require(stringr)) install.packages("stringr")
+library(stringr)
+```
+
+---
+
+Puis on cherche juste Zola cette fois.
+
+```{r}
+gutenberg_works(str_detect(author, "Zola"))
+```
+
+
+---
+
+L'ID de La Bête Humaine est 5154. On le télécharge.
+
+```{r}
+bete_humaine <- gutenberg_download(5154)  ## La Bête Humaine, d'Émile Zola
+```
+
+---
+
+Un aperçu de ce que nous avons obtenu avec la fonction `str`.
+
+```{r}
+str(bete_humaine)
+```
+
+---
+
+```{r}
+bete_humaine$text[100]
+bete_humaine$text[101]
+bete_humaine$text[102]
+```
+
+---
+
+## R et la statistique textuelle
+
+La fondation qui gère le langage R propose une série de [*task views*](https://cran.r-project.org/web/views/), c'est-à-dire de guides de *packages* disponibles pour des thèmes donnés.
+
+---
+
+En particulier, une *[task view](https://cran.r-project.org/web/views/NaturalLanguageProcessing.html)* est disponible pour le traitement automatique du langage naturel (en anglais *natural language processing* ou *NLP*).
+
+Je vous invite à la consulter pour trouver le *package* qui saura répondre à vos questions.
+
+---
+
+## Le package tm
+
+Le *package* **tm** est le package de référence à utiliser pour faire de la statistique textuelle en R.
+
+Plusieurs autres *packages* ont ensuite été construits à partir de *tm* et nécessitent la présence de celui-ci afin de fonctionner.
+
+Cela assure l'utilisation d'un format commun.
+
+---
+
+### Où trouver des réponses ?
+
+* Les pages d'aide
+* La task view
+* Google / Stackoverflow
+* Text Mining with R http://tidytextmining.com/ (gratuit)
+* [Text Analysis with R for Students of Literature](http://www.matthewjockers.net/text-analysis-with-r-for-students-of-literature/) (payant)
+* [Ce cours de l'UNIGE](http://edutechwiki.unige.ch/fr/Tutoriel_tm_text_mining_package)
+
+---
+
+```{r echo = FALSE, cache = TRUE}
+if (!require(readr)) install.packages("readr")
+library(readr)      ## importation
+if (!require(RTextTools)) install.packages("RTextTools")
+library(RTextTools) ## classification de textes
+if (!require(textreuse)) install.packages("textreuse")
+library(textreuse)  ## plagiat
+if (!require(lsa)) install.packages("lsa")
+library(lsa)        ## latent semantic analysis
+```
+
+
+---
+
+
+Nous allons découvrir ce package avec un corpus de tests de jeux de football issus de la presse spécialisée.
+
+```{r}
+fifa <- read_csv2("https://gist.githubusercontent.com/yrochat/844247a0a985f54fb69f09fdc02bfb15/raw/011092f37b6b4529951541b434e802bf995fc6e5/fifa.csv") ## le fichier à importer
+fifa
+```
+
+```{r echo = FALSE}
+fifa$label <- str_c(fifa$auteur, str_sub(fifa$annee, 3, 4), sep = "_") ## on crée cette variable pour nommer les points du graphe
+```
+
+---
+
+### Analyse rapide de plagiat
+
+```{r}
+fifa.corpus <- TextReuseCorpus(text = fifa$texte, tokenizer = tokenize_ngrams)
+```
+
+---
+
+Une comparaison des textes deux à deux.
+
+```{r}
+comparisons <- pairwise_compare(fifa.corpus, jaccard_similarity)
+```
+
+---
+
+Les scores de ces comparaisons.
+
+```{r}
+pairwise_candidates(comparisons)[order(pairwise_candidates(comparisons)$score, decreasing = TRUE),]
+```
+
+---
+
+Les scores les plus hauts.
+
+```{r}
+align_local(fifa$texte[30], fifa$texte[31])
+```
+
+---
+
+```{r}
+align_local(fifa$texte[7], fifa$texte[11])
+```
+
+---
+
+```{r}
+align_local(fifa$texte[11], fifa$texte[12])
+```
+
+---
+
+```{r}
+align_local(fifa$texte[32], fifa$texte[33])
+```
+
+---
+
+```{r}
+align_local(fifa$texte[7], fifa$texte[8])
+```
+
+---
+
+### Importer des fichiers avec tm
+
+```{r}
+if (!require(tm)) install.packages("tm")
+library(tm)         ## text mining
+```
+
+---
+
+On crée un corpus de textes au format de tm.
+
+*A vector source interprets each element of the vector x as a document.*
+
+```{r}
+corpus <- Corpus(VectorSource(fifa$texte))
+corpus
+```
+
+---
+
+`tm_map` est une application qui permet de faire des transformations sur tout un corpus.
+
+Ici, on passe tout en minuscules grâce à `content_transformer(tolower)`.
+
+```{r}
+corpus <- tm_map(corpus, content_transformer(tolower))
+```
+
+---
+
+Ici, nous retirons la ponctuation.
+
+```{r}
+corpus <- tm_map(corpus, content_transformer(removePunctuation))
+```
+
+---
+
+Nous retirons du texte les *stopwords*.
+
+```{r}
+corpus <- tm_map(corpus, content_transformer(function(x) removeWords(x, stopwords("french"))))
+```
+
+---
+
+Voici la liste des *stopwords* en français.
+
+```{r}
+stopwords("french")
+```
+
+---
+
+Nous réduisons les mots à leur racine ("*stemming*").
+
+```{r}
+corpus <- tm_map(corpus, stemDocument, language = "french")
+corpus  # check corpus
+```
+
+---
+
+Matrice terme-document
+
+```{r}
+td.mat <- as.matrix(TermDocumentMatrix(corpus))
+td.mat
+```
+
+---
+
+Matrice des distances
+
+```{r}
+dist.mat <- dist(t(as.matrix(td.mat)))
+dist.mat
+```
+
+---
+
+Classical multidimensional scaling
+
+```{r}
+fit <- cmdscale(dist.mat, eig = TRUE, k = 2)    
+```
+
+---
+
+On prépare les données pour la visualisation.
+
+```{r}
+points <- data.frame(x = fit$points[, 1], y = fit$points[, 2], name = fifa$journal)
+```
+
+---
+
+```{r}
+ggplot(points, aes(x = x, y = y)) + 
+  geom_point(aes(color = name)) +
+  geom_text(aes(label = name), nudge_y = 1.5)
+```
+
+
